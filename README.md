@@ -24,6 +24,6 @@ Email：panhainan@yeah.net
 
 # 如果觉得好，就请支持一下，谢谢！  
 
-![支付宝](http://onxe6sbvc.bkt.clouddn.com/alpay.jpg "在这里输入图片标题")
 
-![微信](http://onxe6sbvc.bkt.clouddn.com/wxpay.png "在这里输入图片标题")
+![支付宝](http://onxe6sbvc.bkt.clouddn.com/alpay.jpg?imageView2/1/w/200/h/300/q/75%7Cimageslim "在这里输入图片标题")
+![微信](http://onxe6sbvc.bkt.clouddn.com/wxpay.png?imageView2/1/w/200/h/300/q/75%7Cimageslim "在这里输入图片标题")
