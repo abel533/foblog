@@ -20,7 +20,7 @@ public interface ICategoryDao extends Mapper<Category> {
      * @param categoryIds 类别id集合
      * @return 受影响的行数
      */
-    Integer delete(@Param("ids") List<Integer> categoryIds);
+    Integer deleteByIds(@Param("ids") List<Integer> categoryIds);
 
     Category selectByCode(@Param("code") String categoryCode,@Param("status")Boolean status);
 
