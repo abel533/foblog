@@ -11,61 +11,12 @@
 		<result property="hits" column="hits" />
 	</resultMap>
 
-	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
-		INSERT
-		INTO
-		t_recommend(title,article_url,summary,pub_time,hits)
-		VALUES
-		(#{title,jdbcType=VARCHAR},
-		#{articleUrl,jdbcType=VARCHAR},
-		#{summary,jdbcType=VARCHAR},
-		#{pubTime,jdbcType=TIMESTAMP},
-		#{hits,jdbcType=INTEGER})
-	</insert>
-
-	<delete id="delete">
-		DELETE FROM t_recommend
-		WHERE
-		id=#{id,jdbcType=BIGINT}
-	</delete>
-
-	<update id="update">
-		UPDATE t_recommend
-		SET
-		title=#{title,jdbcType=VARCHAR},
-		article_url=#{articleUrl,jdbcType=VARCHAR},
-		summary=#{summary,jdbcType=VARCHAR},
-		pub_time=#{pubTime,jdbcType=TIMESTAMP}
-		WHERE id =
-		#{id,jdbcType=BIGINT}
-	</update>
     <update id="updateHits">
         UPDATE t_recommend
         SET
-        hits=#{hits,jdbcType=INTEGER}
+        hits=hits+1
         WHERE id =
-        #{id,jdbcType=BIGINT}
+        #{id,jdbcType=INTEGER}
     </update>
-	<select id="selectById" resultMap="RecommendMap">
-		SELECT *
-		FROM t_recommend
-		WHERE
-		id = #{id,jdbcType=INTEGER}
-	</select>
-	<select id="selectBy" resultMap="RecommendMap">
-		SELECT *
-		FROM t_recommend
-		ORDER BY pub_time DESC
-		<if
-			test="pageConfig!=null and pageConfig.pageIndex!=null and pageConfig.pageSize!=null">
-			LIMIT
-			#{pageConfig.pageIndex,jdbcType=INTEGER},#{pageConfig.pageSize,jdbcType=INTEGER}
-		</if>
-	</select>
-	<select id="selectCountBy" resultType="Integer">
-		SELECT COUNT(*)
-		FROM t_recommend
-	</select>
-
 
 </mapper>

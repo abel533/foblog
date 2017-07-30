@@ -81,23 +81,24 @@ public class MessageServiceImpl implements IMessageService {
 
     @Override
     public Boolean messageDeleteById(int messageId, int authorId) {
-        Message message = iMessageDao.selectById(messageId);
+        Message message = iMessageDao.selectByPrimaryKey(messageId);
         Integer result = 0;
         if (message != null) {
-            Article article = iArticleDao.selectById(message.getArticleId());
+            Article article = iArticleDao.selectByPrimaryKey(message.getArticleId());
             if (article != null) {
                 if (message.getParentId() != CommonConstant.MESSAGE_DEFAULT_PARENT_ID) {
-                    Integer counts = iMessageDao.selectCountBy(messageId,
-                            message.getBlockId());
-                    result = iMessageDao.deleteBy(messageId,
-                            message.getBlockId());
+                    Message countBy = new Message();
+                    countBy.setId(messageId);
+                    countBy.setBlockId(message.getBlockId());
+                    Integer counts = iMessageDao.selectCount(countBy);
+                    result = iMessageDao.delete(countBy);
                     if (result == counts) {
                         return true;
                     } else {
                         return false;
                     }
                 } else {
-                    result = iMessageDao.deleteById(messageId);
+                    result = iMessageDao.deleteByPrimaryKey(messageId);
                     return ReturnUtil.returnResult(result);
                 }
             }
@@ -107,7 +108,9 @@ public class MessageServiceImpl implements IMessageService {
 
     @Override
     public Boolean messageDeleteBy(int messageArticleId) {
-        Integer result = iMessageDao.deleteByArticleId(messageArticleId);
+        Message deleteBy = new Message();
+        deleteBy.setArticleId(messageArticleId);
+        Integer result = iMessageDao.delete(deleteBy);
         return ReturnUtil.returnResult(result);
     }
 

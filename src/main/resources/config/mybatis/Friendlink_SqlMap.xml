@@ -14,63 +14,10 @@
         <result property="addTime" column="add_time"/>
     </resultMap>
 
-    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO t_friendlink(name,description,website,hits,priority,
-        web_author_name,
-        web_author_email,
-        add_time)
-        VALUES (
-            #{name,jdbcType=VARCHAR},
-            #{description,jdbcType=VARCHAR},
-            #{website,jdbcType=VARCHAR},
-            #{hits,jdbcType=INTEGER},
-            #{priority,jdbcType=INTEGER},
-            #{webAuthorName,jdbcType=VARCHAR},
-            #{webAuthorEmail,jdbcType=VARCHAR},
-            #{addTime,jdbcType=TIMESTAMP}
-        )
-    </insert>
-    <select id="selectBy" resultMap="FriendlinkMap">
-        SELECT * FROM t_friendlink
-        ORDER BY priority
-        <if test="pageConfig!=null and pageConfig.pageIndex!=null and pageConfig.pageSize!=null">
-            LIMIT
-            #{pageConfig.pageIndex,jdbcType=INTEGER},#{pageConfig.pageSize,jdbcType=INTEGER}
-        </if>
-    </select>
-    <select id="selectCountBy" resultType="Integer">
-        SELECT COUNT(*)
-        FROM t_friendlink
-    </select>
-    <delete id="deleteById">
-        DELETE FROM t_friendlink
-        WHERE id = #{id,jdbcType=INTEGER}
-    </delete>
-
-    <update id="update">
-        UPDATE t_friendlink
-        SET
-        name=#{name,jdbcType=VARCHAR},
-        description = #{description,jdbcType=VARCHAR},
-        website= #{website,jdbcType=VARCHAR},
-        priority= #{priority,jdbcType=INTEGER},
-        web_author_name= #{webAuthorName,jdbcType=VARCHAR},
-        web_author_email= #{webAuthorEmail,jdbcType=VARCHAR}
-        WHERE id = #{id,jdbcType=INTEGER}
-    </update>
-
     <update id="updateHits">
         UPDATE t_friendlink
         SET
-        hits=#{hits,jdbcType=VARCHAR}
+        hits=hits+1
         WHERE id = #{id,jdbcType=INTEGER}
     </update>
-
-    <select id="selectById" resultMap="FriendlinkMap">
-        SELECT * FROM t_friendlink
-        WHERE id=#{id,jdbcType=INTEGER}
-    </select>
-
-
-
 </mapper>

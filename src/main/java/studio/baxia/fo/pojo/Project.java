@@ -1,19 +1,20 @@
 package studio.baxia.fo.pojo;
 
+import javax.persistence.Table;
 import java.util.Date;
 
 /**
  * Created by Pan on 2016/12/27.
  */
-public class Project {
-    private int id;
-    private String name;
-    private String introduction;
-    private Date pubTime;
-    private int hits;
-    private String downUrl;
-    private String articleUrl;
-    private boolean status;
+@Table(name = "t_project")
+public class Project extends BaseId {
+    private String  name;
+    private String  introduction;
+    private Date    pubTime;
+    private Integer hits;
+    private String  downUrl;
+    private String  articleUrl;
+    private Boolean status;
 
     public Project() {
     }
@@ -32,16 +33,6 @@ public class Project {
                 ", articleUrl='" + articleUrl + '\'' +
                 ", status=" + status +
                 '}';
-    }
-
-
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -68,11 +59,11 @@ public class Project {
         this.pubTime = pubTime;
     }
 
-    public int getHits() {
+    public Integer getHits() {
         return hits;
     }
 
-    public void setHits(int hits) {
+    public void setHits(Integer hits) {
         this.hits = hits;
     }
 
@@ -92,12 +83,11 @@ public class Project {
         this.articleUrl = articleUrl;
     }
 
-
-    public boolean isStatus() {
+    public Boolean getStatus() {
         return status;
     }
 
-    public void setStatus(boolean status) {
+    public void setStatus(Boolean status) {
         this.status = status;
     }
 }

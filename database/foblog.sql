@@ -45,17 +45,18 @@ CREATE TABLE `t_article` (
 -- ----------------------------
 DROP TABLE IF EXISTS `t_authors`;
 CREATE TABLE `t_authors` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
-  `account` varchar(20) NOT NULL COMMENT '账户名',
-  `password` varchar(32) NOT NULL COMMENT '账户密码',
-  `pen_name` varchar(20) DEFAULT NULL COMMENT '笔名',
-  `email` varchar(30) DEFAULT NULL COMMENT '常用邮箱',
-  `profile` text COMMENT '个人介绍',
-  `verification_code` varchar(32) DEFAULT NULL COMMENT '验证码',
-  `varif_code_deadline` datetime DEFAULT NULL COMMENT '验证码截止时间',
-  `security_question_id` int(10) DEFAULT NULL COMMENT '密保问题id',
-  `user_status` int(1) DEFAULT NULL COMMENT '用户状态:0禁用，1启用',
-  `other_info` varchar(500) DEFAULT NULL COMMENT '其他信息',
+  `id`                   int(10) NOT NULL AUTO_INCREMENT,
+  `account`              varchar(20) NOT NULL COMMENT '账户名',
+  `password`             varchar(32) NOT NULL COMMENT '账户密码',
+  `pen_name`             varchar(20)      DEFAULT NULL COMMENT '笔名',
+  `email`                varchar(30)      DEFAULT NULL COMMENT '常用邮箱',
+  `profile`              text COMMENT '个人介绍',
+  `verification_code`    varchar(32)      DEFAULT NULL COMMENT '验证码',
+  `verif_code_deadline`  DATETIME         DEFAULT NULL
+  COMMENT '验证码截止时间',
+  `security_question_id` int(10)          DEFAULT NULL COMMENT '密保问题id',
+  `user_status`          int(1)           DEFAULT NULL COMMENT '用户状态:0禁用，1启用',
+  `other_info`           varchar(500)     DEFAULT NULL COMMENT '其他信息',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 

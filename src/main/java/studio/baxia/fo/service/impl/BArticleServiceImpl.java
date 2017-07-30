@@ -1,5 +1,7 @@
 package studio.baxia.fo.service.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import studio.baxia.fo.common.CommonConstant;
@@ -11,6 +13,7 @@ import studio.baxia.fo.dao.IMessageDao;
 import studio.baxia.fo.dao.ITagDao;
 import studio.baxia.fo.pojo.Article;
 import studio.baxia.fo.pojo.Category;
+import studio.baxia.fo.pojo.Message;
 import studio.baxia.fo.pojo.Tag;
 import studio.baxia.fo.service.IBArticleService;
 import studio.baxia.fo.util.ReturnUtil;
@@ -19,7 +22,6 @@ import studio.baxia.fo.vo.ArticleVo;
 import studio.baxia.fo.vo.CategoryVo;
 
 import java.io.UnsupportedEncodingException;
-import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -65,7 +67,7 @@ public class BArticleServiceImpl implements IBArticleService {
                 article.setPubTime(new Date());
             }
             article.setTagIds(getTagIdsBy(article.getTagNames()));
-            result = iArticleDao.update(article);
+            result = iArticleDao.updateByPrimaryKey(article);
         }
         if (ReturnUtil.returnResult(result)) {
             return article.getId();
@@ -76,14 +78,16 @@ public class BArticleServiceImpl implements IBArticleService {
 
     @Override
     public Boolean deleteById(int articleId) {
-        Article article = iArticleDao.selectById(articleId);
+        Article article = iArticleDao.selectByPrimaryKey(articleId);
         if (article != null) {
             // 获取该文章id对应的所有评论记录总数
-            Integer counts = iMessageDao.selectCountByArticleId(articleId);
+            Integer counts = getArticleCountMessages(articleId);
             // 返回删除所有评论的文章为id的受影响行数
-            Integer results = iMessageDao.deleteByArticleId(articleId);
+            Message deleteBy = new Message();
+            deleteBy.setArticleId(articleId);
+            Integer results = iMessageDao.delete(deleteBy);
             if (results == counts) {
-                Integer result = iArticleDao.delete(articleId);
+                Integer result = iArticleDao.deleteByPrimaryKey(articleId);
                 return ReturnUtil.returnResult(result);
             }
         }
@@ -92,7 +96,7 @@ public class BArticleServiceImpl implements IBArticleService {
 
     @Override
     public Boolean deleteTag(int tagId, int articleId) {
-        Article article = iArticleDao.selectById(articleId);
+        Article article = iArticleDao.selectByPrimaryKey(articleId);
         if (article != null) {
             String tagIdsStr = article.getTagIds();
             // int index = tagIdsStr.indexOf((tagId + ","));
@@ -101,7 +105,7 @@ public class BArticleServiceImpl implements IBArticleService {
             // } else {
             String str = tagIdsStr.replaceAll((tagId + ","), "");
             article.setTagIds(str);
-            Integer result = iArticleDao.update(article);
+            Integer result = iArticleDao.updateByPrimaryKey(article);
             return ReturnUtil.returnResult(result);
             // }
         }
@@ -110,7 +114,7 @@ public class BArticleServiceImpl implements IBArticleService {
 
     @Override
     public Article getById(int articleId) {
-        Article article = iArticleDao.selectById(articleId);
+        Article article = iArticleDao.selectByPrimaryKey(articleId);
         updateAritcleHits(articleId);
         return article;
     }
@@ -169,13 +173,13 @@ public class BArticleServiceImpl implements IBArticleService {
                                                    PageConfig pageConfig) {
         Article article = new Article();
         article.setStatus(articleStatus);
-        List<Article> result = iArticleDao.selectBy(article, pageConfig);
+        PageHelper.startPage(pageConfig);
+        List<Article> result = iArticleDao.selectBy(article);
         for(int i =0,len = result.size();i<len;i++){
             result.get(i).setCountMessages(getArticleCountMessages(result.get(i).getId()));
         }
-        Integer resultCount = iArticleDao.selectCountBy(article);
         PageInfoResult<Article> pageInfoResult = new PageInfoResult(result,
-                pageConfig, resultCount);
+                pageConfig, (int) ((Page) result).getTotal());
         return pageInfoResult;
     }
 
@@ -184,10 +188,10 @@ public class BArticleServiceImpl implements IBArticleService {
             Integer articleStatus, PageConfig pageConfig) {
         Article article = new Article();
         article.setStatus(articleStatus);
-        List<ArticleVo> result = iArticleDao.selectVoBy(article, pageConfig);
-        Integer resultCount = iArticleDao.selectCountBy(article);
+        PageHelper.startPage(pageConfig);
+        List<ArticleVo> result = iArticleDao.selectVoBy(article);
         PageInfoResult<ArticleVo> pageInfoResult = new PageInfoResult(result,
-                pageConfig, resultCount);
+                pageConfig, (int) ((Page) result).getTotal());
         return pageInfoResult;
     }
     @Override
@@ -199,7 +203,7 @@ public class BArticleServiceImpl implements IBArticleService {
         if (category != null) {
             List<ArticleVo> result = iArticleDao.selectVoBy(new Article()
                     .setStatus(CommonConstant.ACTICLE_STATUS_BLOG)
-                    .setCategoryIds(category.getId()), null);
+                    .setCategoryIds(category.getId()));
             int countMessages=0,hits = 0;
             for(int i =0,len = result.size();i<len;i++){
                 int messageCount = getArticleCountMessages(result.get(i).getId());
@@ -226,7 +230,7 @@ public class BArticleServiceImpl implements IBArticleService {
         if (category != null) {
             List<ArticleVo> result = iArticleDao.selectVoBy(new Article()
                     .setStatus(CommonConstant.ACTICLE_STATUS_BLOG)
-                    .setCategoryIds(category.getId()), null);
+                    .setCategoryIds(category.getId()));
             int countMessages=0,hits = 0;
             for(int i =0,len = result.size();i<len;i++){
                 int messageCount = getArticleCountMessages(result.get(i).getId());
@@ -249,8 +253,7 @@ public class BArticleServiceImpl implements IBArticleService {
     @Override
     public List<Article> getAllByTagId(int tagId, Integer articleStatus) {
         List<Article> list = iArticleDao.selectBy(
-                new Article().setTagIds(tagId + ",").setStatus(articleStatus),
-                null);
+                new Article().setTagIds(tagId + ",").setStatus(articleStatus));
         return list;
     }
 
@@ -259,7 +262,7 @@ public class BArticleServiceImpl implements IBArticleService {
                                                    Integer articleStatus) {
         List<Article> list = iArticleDao.selectBy(
                 new Article().setCategoryIds(categoryId).setStatus(
-                        articleStatus), null);
+                        articleStatus));
         return list;
     }
 
@@ -269,7 +272,7 @@ public class BArticleServiceImpl implements IBArticleService {
         if (tag != null) {
             List<ArticleVo> result = iArticleDao.selectVoBy(
                     new Article().setStatus(CommonConstant.ACTICLE_STATUS_BLOG)
-                            .setTagIds(tag.getId() + ","), null);
+                            .setTagIds(tag.getId() + ","));
             for(int i =0,len = result.size();i<len;i++){
                 result.get(i).setCountMessages(getArticleCountMessages(result.get(i).getId()));
             }
@@ -295,11 +298,13 @@ public class BArticleServiceImpl implements IBArticleService {
     }
 
     private int getArticleCountMessages(int articleId){
-        int count = iMessageDao.selectCountByArticleId(articleId);
+        Message message = new Message();
+        message.setArticleId(articleId);
+        int count = iMessageDao.selectCount(message);
         return count;
     }
     private void updateAritcleHits(int articleId){
-        Article article = iArticleDao.selectById(articleId);
+        Article article = iArticleDao.selectByPrimaryKey(articleId);
         article.setHits(article.getHits()+1);
         iArticleDao.updateHits(article);
     }
@@ -312,9 +317,6 @@ public class BArticleServiceImpl implements IBArticleService {
             for (int i = 0; i < tagIdsArr.length; i++) {
                 if (tagIdsArr[i] != "") {
                     tagIdList.add(Integer.parseInt(tagIdsArr[i]));
-                    // Integer tagId = Integer.parseInt(tagIdsArr[i]);
-                    // Tag tag = iTagDao.selectById(tagId, articleAuthorId);
-                    // tagNames[i]=tag.getName();
                 }
             }
             List<Tag> tags = iTagDao.selectByIds(tagIdList);

@@ -29,14 +29,14 @@ public class BTagServiceImpl implements IBTagService {
 
     @Override
     public Boolean edit(Tag tag) {
-        Integer result = iTagDao.update(tag);
+        Integer result = iTagDao.updateByPrimaryKey(tag);
         return ReturnUtil.returnResult(result);
     }
 
     @Override
     public Boolean deleteById(int tagId) {
         List<Article> listArticle = iArticleDao.selectBy(
-                new Article().setTagIds(tagId + ","), null);
+                new Article().setTagIds(tagId + ","));
         if (listArticle != null) {
             for (int i = 0; i < listArticle.size(); i++) {
                 Article article = listArticle.get(i);
@@ -47,26 +47,26 @@ public class BTagServiceImpl implements IBTagService {
                 } else {
                     String str = tagIdsStr.replaceAll((tagId + ","), "");
                     article.setTagIds(str);
-                    Integer result = iArticleDao.update(article);
+                    Integer result = iArticleDao.updateByPrimaryKey(article);
                     if (result == 0) {
                         return false;
                     }
                 }
             }
         }
-        Integer result = iTagDao.delete(tagId);
+        Integer result = iTagDao.deleteByPrimaryKey(tagId);
         return ReturnUtil.returnResult(result);
     }
 
     @Override
     public Tag getById(int tagId) {
-        Tag result = iTagDao.selectById(tagId);
+        Tag result = iTagDao.selectByPrimaryKey(tagId);
         return result;
     }
 
     @Override
     public List<Tag> getAllBy() {
-        List<Tag> result = iTagDao.selectBy();
+        List<Tag> result = iTagDao.selectAll();
         return result;
     }
 

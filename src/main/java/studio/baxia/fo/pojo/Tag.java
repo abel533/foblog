@@ -1,11 +1,13 @@
 package studio.baxia.fo.pojo;
 
+import javax.persistence.Table;
+
 /**
  * Created by FirePan on 2016/10/11. 文章标签实体信息.
  */
-public class Tag {
-	private Integer id;
-	private String name; // 标签名称
+@Table(name = "t_tag")
+public class Tag extends BaseId {
+    private String name; // 标签名称
 
 	public Tag() {
 		super();
@@ -18,14 +20,6 @@ public class Tag {
 	@Override
 	public String toString() {
 		return "Tag [id=" + id + ", name=" + name + "]";
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
 	}
 
 	public String getName() {

@@ -22,8 +22,8 @@ public class IUserServiceTest extends BaseTest {
     @Test
     @Rollback(value = false)
     public void testAddAuthors() throws NoSuchAlgorithmException {
-        String userName = "test";
-        String userPass = "test123";
+        String userName = "admin";
+        String userPass = "123456";
         String pass = MDUtil.generatePass(userName, userPass);
         int userStatus = 1;
         Authors authors = new Authors(userName,pass,userStatus);

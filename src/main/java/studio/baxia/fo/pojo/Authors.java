@@ -1,13 +1,14 @@
 package studio.baxia.fo.pojo;
 
+import javax.persistence.Table;
 import java.util.Date;
 
 /**
  * Created by FirePan on 2016/10/11. 作者实体信息.
  */
-public class Authors {
-	private Integer id;
-	private String account;// 账户名
+@Table(name = "t_authors")
+public class Authors extends BaseId {
+    private String account;// 账户名
 	private String password;// 账户密码
 	private Integer userStatus;// 用户状态:0禁用，1启用
 	private String penName;// 笔名
@@ -41,14 +42,6 @@ public class Authors {
 				+ verificationCode + '\'' + ", verifCodeDeadline="
 				+ verifCodeDeadline + ", securityQuestionId='"
 				+ securityQuestionId + '\'' + '}';
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
 	}
 
 	public String getAccount() {

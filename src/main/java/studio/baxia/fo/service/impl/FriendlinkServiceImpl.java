@@ -1,5 +1,7 @@
 package studio.baxia.fo.service.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import studio.baxia.fo.common.PageConfig;
@@ -46,9 +48,9 @@ public class FriendlinkServiceImpl implements IFriendlinkService {
      */
     @Override
     public PageInfoResult<Friendlink> pagingList(PageConfig pageConfig) {
-        List<Friendlink> list = iFriendDao.selectBy(pageConfig);
-        int count = iFriendDao.selectCountBy();
-        PageInfoResult<Friendlink> pageInfoResult = new PageInfoResult<>(list,pageConfig,count);
+        PageHelper.startPage(pageConfig);
+        List<Friendlink> list = iFriendDao.selectAll();
+        PageInfoResult<Friendlink> pageInfoResult = new PageInfoResult<>(list, pageConfig, (int) ((Page) list).getTotal());
         return pageInfoResult;
     }
 
@@ -59,33 +61,31 @@ public class FriendlinkServiceImpl implements IFriendlinkService {
      */
     @Override
     public List<Friendlink> list() {
-        List<Friendlink> list = iFriendDao.selectBy(null);
+        List<Friendlink> list = iFriendDao.selectAll();
         return list;
     }
 
     @Override
     public Friendlink get(int fId) {
-        Friendlink friendlink = iFriendDao.selectById(fId);
+        Friendlink friendlink = iFriendDao.selectByPrimaryKey(fId);
         return friendlink;
     }
 
     @Override
     public boolean delete(int fId) {
-        int result = iFriendDao.deleteById(fId);
+        int result = iFriendDao.deleteByPrimaryKey(fId);
         return ReturnUtil.returnResult(result);
     }
 
     @Override
     public boolean update(Friendlink friendlink) {
-        int result = iFriendDao.update(friendlink);
+        int result = iFriendDao.updateByPrimaryKey(friendlink);
         return ReturnUtil.returnResult(result);
     }
 
     @Override
     public boolean hits(int id) {
-        Friendlink friendlink = iFriendDao.selectById(id);
-        friendlink.setHits(friendlink.getHits()+1);
-        iFriendDao.updateHits(friendlink);
+        iFriendDao.updateHits(id);
         return true;
     }
 }

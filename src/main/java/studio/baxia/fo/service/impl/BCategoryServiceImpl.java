@@ -33,17 +33,17 @@ public class BCategoryServiceImpl implements IBCategoryService {
 
     @Override
     public Boolean edit(Category category) {
-        Category tempCategory = iCategoryDao.selectById(category.getId(),CommonConstant.PROJECT_ALL);
+        Category tempCategory = iCategoryDao.selectByPrimaryKey(category);
         if(null==tempCategory){
             return false;
         }
-        Integer result = iCategoryDao.update(category);
+        Integer result = iCategoryDao.updateByPrimaryKey(category);
         return ReturnUtil.returnResult(result);
     }
 
     @Override
     public Boolean deleteById(int categoryId) {
-        Category cIdCategory = iCategoryDao.selectById(categoryId,CommonConstant.PROJECT_ALL);
+        Category cIdCategory = iCategoryDao.selectByPrimaryKey(categoryId);
         if (cIdCategory.getName().equals(CommonConstant.NEW_NO_NAME_CATEGORY)) {
             return false;
         } else {
@@ -62,23 +62,14 @@ public class BCategoryServiceImpl implements IBCategoryService {
             }
             Integer result1 = iArticleDao.updateCategoryId(categoryId,
                     newCategoryId);
-            Integer result2 = iCategoryDao.deleteById(categoryId);
+            Integer result2 = iCategoryDao.deleteByPrimaryKey(categoryId);
             return ReturnUtil.returnResult(result2);
         }
-
-        // 下面的代码是为多级目录准备的，但是此次已经舍弃多级目录
-		/*
-		 * Category c = iCategoryDao.selectById(categoryId); Integer result =
-		 * null; if (c != null && c.getAuthorId() == categoryAuthorId) { if
-		 * (c.getParentId() == 0) { // 根级别目录 result = iCategoryDao.deleteBy(1,
-		 * categoryId); } result += iCategoryDao.deleteById(categoryId); return
-		 * returnResult(result); } else { // categoryId不存在或者没有权限 return false; }
-		 */
     }
 
     @Override
     public List<Category> getAllBy() {
-        List<Category> result = iCategoryDao.selectBy();
+        List<Category> result = iCategoryDao.selectAll();
         return result;
     }
 
@@ -89,8 +80,11 @@ public class BCategoryServiceImpl implements IBCategoryService {
     }
 
     @Override
-    public Category getById(int categoryId,boolean status) {
-        Category result = iCategoryDao.selectById(categoryId,status);
+    public Category getById(int categoryId, boolean status) {
+        Category query = new Category();
+        query.setId(categoryId);
+        query.setStatus(status);
+        Category result = iCategoryDao.selectOne(query);
         return result;
     }
 

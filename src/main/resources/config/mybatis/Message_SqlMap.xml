@@ -13,12 +13,7 @@
         <result property="pubTime" column="pub_time"/>
     </resultMap>
 
-    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO t_message(article_id,block_id,parent_id,content,user_type,author_id,pub_time)
-        VALUES (#{articleId,jdbcType=INTEGER},#{blockId,jdbcType=INTEGER},#{parentId,jdbcType=INTEGER},#{content,jdbcType=VARCHAR},#{userType,jdbcType=INTEGER},#{authorId,jdbcType=INTEGER},#{pubTime,jdbcType=TIMESTAMP})
-    </insert>
-
-    <delete id="delete">
+    <delete id="deleteByIds">
         DELETE FROM t_message
         <if test="ids!=null">
             <if test="ids.size()==0">
@@ -32,23 +27,6 @@
             </if>
         </if>
     </delete>
-
-    <delete id="deleteBy">
-        DELETE FROM t_message
-        WHERE parent_id = #{parentId,jdbcType=INTEGER}
-        AND block_id = #{blockId,jdbcType=INTEGER}
-    </delete>
-
-
-    <delete id="deleteByArticleId">
-        DELETE FROM t_message
-        WHERE article_id = #{articleId,jdbcType=INTEGER}
-    </delete>
-
-    <select id="selectById" resultMap="MessageMap">
-        SELECT * FROM t_message
-        WHERE id = #{id,jdbcType=INTEGER}
-    </select>
 
     <select id="selectByArticleId" resultMap="MessageMap">
         SELECT * FROM t_message
@@ -69,16 +47,6 @@
         </if>
     </select>
 
-    <select id="selectCountByArticleId" resultType="INTEGER">
-        SELECT COUNT(*) FROM t_message
-        where article_id = #{articleId,jdbcType=INTEGER}
-    </select>
-
-    <select id="selectCountBy" resultType="INTEGER">
-        SELECT count(*) FROM t_message
-        WHERE parent_id = #{parentId,jdbcType=INTEGER}
-        AND block_id = #{blockId,jdbcType=INTEGER}
-    </select>
 
     <resultMap id="ArticleMessageVoMap" type="studio.baxia.fo.vo.ArticleMessageVo">
     </resultMap>

@@ -11,27 +11,6 @@
 		<result property="name" column="name" />
 		<result property="counts" column="article_counts" />
 	</resultMap>
-	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
-		INSERT
-		INTO t_tag(name)
-		VALUES
-		(#{name,jdbcType=VARCHAR})
-	</insert>
-	<insert id="update">
-		UPDATE t_tag
-		SET name=#{name,jdbcType=VARCHAR}
-        WHERE id = #{id,jdbcType=INTEGER}
-	</insert>
-	<delete id="delete">
-		DELETE FROM t_tag
-		WHERE id = #{id,jdbcType=INTEGER}
-	</delete>
-
-	<select id="selectById" resultMap="TagMap">
-		SELECT * FROM t_tag
-		WHERE
-		id=#{id,jdbcType=INTEGER}
-	</select>
 
 	<select id="selectByIds" resultMap="TagMap">
 		SELECT * FROM t_tag
@@ -47,14 +26,9 @@
 				</foreach>
 			</if>
 		</if>
-
 	</select>
 
-	<select id="selectBy" resultMap="TagMap">
-		SELECT * FROM t_tag
-		ORDER BY id
-	</select>
-	<select id="selectVoBy" resultMap="TagVoMap">
+    <select id="selectVoBy" resultMap="TagVoMap">
 	    	SELECT t1.*, ( 
 				    	select count(*) 
 				    	from  t_article t2 

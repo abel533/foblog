@@ -28,43 +28,7 @@
 		<result property="pubTime" column="pub_time" />
         <result property="code" column="code" />
 	</resultMap>
-	
-	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
-		INSERT
-		INTO
-		t_article(title,code,summary,content,category_ids,tag_ids,status,write_time,pub_time)
-		VALUES
-		(#{title,jdbcType=VARCHAR},
-		#{code,jdbcType=VARCHAR},
-		#{summary,jdbcType=VARCHAR},
-		#{content,jdbcType=VARCHAR},
-		#{categoryIds,jdbcType=INTEGER},
-		#{tagIds,jdbcType=VARCHAR},
-		#{status,jdbcType=INTEGER},
-		#{writeTime,jdbcType=TIMESTAMP},
-		#{pubTime,jdbcType=TIMESTAMP})
-	</insert>
 
-	<delete id="delete">
-		DELETE FROM t_article
-		WHERE
-		id=#{id,jdbcType=INTEGER}
-	</delete>
-
-	<update id="update">
-		UPDATE t_article
-		SET
-		title=#{title,jdbcType=VARCHAR},
-		summary=#{summary,jdbcType=VARCHAR},
-		content=#{content,jdbcType=VARCHAR},
-		category_ids=#{categoryIds,jdbcType=INTEGER},
-		tag_ids=#{tagIds,jdbcType=VARCHAR},
-		status=#{status,jdbcType=INTEGER},
-		write_time=#{writeTime,jdbcType=TIMESTAMP},
-		pub_time=#{pubTime,jdbcType=TIMESTAMP}
-		WHERE id =
-		#{id,jdbcType=INTEGER}
-	</update>
     <update id="updateHits">
         UPDATE t_article
         SET
@@ -93,13 +57,6 @@
 		t1.category_ids = t2.id
 		WHERE
 		t1.id = #{id,jdbcType=INTEGER}
-	</select>
-	<select id="selectById" resultMap="ArticleMap">
-		SELECT *
-		FROM t_article
-		WHERE
-		id
-		= #{id,jdbcType=INTEGER}
 	</select>
 	<select id="selectVoByTitle" resultMap="ArticleVoMap">
 		SELECT t1.*,t2.name as
@@ -132,51 +89,24 @@
 		SELECT *
 		FROM t_article
 		<where>
-			<if test="article.title!=null">
+            <if test="title!=null">
 				AND title like CONCAT(CONCAT('%',
-				#{article.title,jdbcType=VARCHAR}),
+                #{title,jdbcType=VARCHAR}),
 				'%')
 			</if>
-			<if test="article.categoryIds!=null">
+            <if test="categoryIds!=null">
 				AND category_ids =
-				#{article.categoryIds,jdbcType=INTEGER}
+                #{categoryIds,jdbcType=INTEGER}
 			</if>
-			<if test="article.tagIds!=null">
+            <if test="tagIds!=null">
 				AND tag_ids like CONCAT(CONCAT('%',
-				#{article.tagIds,jdbcType=VARCHAR}), '%')
+                #{tagIds,jdbcType=VARCHAR}), '%')
 			</if>
-			<if test="article.status!=null">
-				AND status =#{article.status,jdbcType=VARCHAR}
+            <if test="status!=null">
+                AND status =#{status,jdbcType=VARCHAR}
 			</if>
 		</where>
 		ORDER BY write_time DESC
-		<if
-			test="pageConfig!=null and pageConfig.pageIndex!=null and pageConfig.pageSize!=null">
-			LIMIT
-			#{pageConfig.pageIndex,jdbcType=INTEGER},#{pageConfig.pageSize,jdbcType=INTEGER}
-		</if>
-	</select>
-	<select id="selectCountBy" resultType="Integer">
-		SELECT COUNT(*)
-		FROM t_article
-		<where>
-			<if test="article.title!=null">
-				AND title like CONCAT(CONCAT('%',
-				#{article.title,jdbcType=VARCHAR}),
-				'%')
-			</if>
-			<if test="article.categoryIds!=null">
-				AND category_ids =
-				#{article.categoryIds,jdbcType=INTEGER}
-			</if>
-			<if test="article.tagIds!=null">
-				AND tag_ids like CONCAT(CONCAT('%',
-				#{article.tagIds,jdbcType=VARCHAR}), '%')
-			</if>
-			<if test="article.status!=null">
-				AND status =#{article.status,jdbcType=VARCHAR}
-			</if>
-		</where>
 	</select>
 
 	<select id="selectVoBy" resultMap="ArticleVoMap">
@@ -186,28 +116,23 @@
 		t_category t2
 		ON t1.category_ids = t2.id
 		<where>
-			<if test="article.title!=null">
+            <if test="title!=null">
 				AND t1.title like CONCAT(CONCAT('%',
-				#{article.title,jdbcType=VARCHAR}), '%')
+                #{title,jdbcType=VARCHAR}), '%')
 			</if>
-			<if test="article.categoryIds!=null">
+            <if test="categoryIds!=null">
 				AND t1.category_ids =
-				#{article.categoryIds,jdbcType=INTEGER}
+                #{categoryIds,jdbcType=INTEGER}
 			</if>
-			<if test="article.tagIds!=null">
+            <if test="tagIds!=null">
 				AND t1.tag_ids like CONCAT(CONCAT('%',
-				#{article.tagIds,jdbcType=VARCHAR}), '%')
+                #{tagIds,jdbcType=VARCHAR}), '%')
 			</if>
-			<if test="article.status!=null">
-				AND t1.status =#{article.status,jdbcType=VARCHAR}
+            <if test="status!=null">
+                AND t1.status =#{status,jdbcType=VARCHAR}
 			</if>
 		</where>
 		ORDER BY t1.id DESC
-		<if
-			test="pageConfig!=null and pageConfig.pageIndex!=null and pageConfig.pageSize!=null">
-			LIMIT
-			#{pageConfig.pageIndex,jdbcType=INTEGER},#{pageConfig.pageSize,jdbcType=INTEGER}
-		</if>
 	</select>
 	<select id="selectNextOrPreVoBy" resultMap="ArticleMap">
 		select t1.id,t1.title,t1.code

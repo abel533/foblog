@@ -35,8 +35,6 @@ public class UserServiceImpl implements IUserService {
 		return iAuthorsDao.insert(authors);
 	}
 
-
-
 	@Override
 	public Boolean authorsEditPassword(Integer authorsId,
 			String authorsAccount, String authorsPassword,
@@ -51,24 +49,31 @@ public class UserServiceImpl implements IUserService {
 
 	@Override
 	public Boolean authorsEditStatus(Integer authorsId, Integer userStatus) {
-		iAuthorsDao.updateAuthorsStatus(authorsId, userStatus);
-		return true;
+        Authors authors = new Authors();
+        authors.setId(authorsId);
+        authors.setUserStatus(userStatus);
+        iAuthorsDao.updateByPrimaryKeySelective(authors);
+        return true;
 	}
 
 	@Override
 	public Authors authorsGetById(Integer authorsId) {
-		return iAuthorsDao.selectById(authorsId);
-	}
+        return iAuthorsDao.selectByPrimaryKey(authorsId);
+    }
 
 	@Override
 	public Authors authorsGetByAccount(String authorsAccount) {
-		return iAuthorsDao.selectByAccount(authorsAccount);
-	}
+        Authors authors = new Authors();
+        authors.setAccount(authorsAccount);
+        return iAuthorsDao.selectOne(authors);
+    }
 
 	@Override
 	public Authors authorsGetByEmail(String authorsEmail) {
-		return iAuthorsDao.selectByEmail(authorsEmail);
-	}
+        Authors authors = new Authors();
+        authors.setEmail(authorsEmail);
+        return iAuthorsDao.selectOne(authors);
+    }
 
 	@Override
 	public List<Authors> authorsGetList(Integer pageIndex, Integer pageSize,
@@ -110,8 +115,8 @@ public class UserServiceImpl implements IUserService {
 			account = URLDecoder
 					.decode(JCryptionUtil.decrypt(authorVo.getAccount(), keys),
 							"utf-8");
-			Authors au = iAuthorsDao.selectByAccount(account);
-			if (au == null) {
+            Authors au = authorsGetByAccount(account);
+            if (au == null) {
 				return null;
 			}
 			String password = URLDecoder.decode(
@@ -145,8 +150,8 @@ public class UserServiceImpl implements IUserService {
 		if(account ==null){
 			return null;
 		}
-		Authors author = iAuthorsDao.selectByAccount(account);
-		author.setAccount(null);
+        Authors author = authorsGetByAccount(account);
+        author.setAccount(null);
 		author.setId(0);
 		author.setPassword(null);
 		return author;
@@ -157,14 +162,14 @@ public class UserServiceImpl implements IUserService {
 		if(account ==null){
 			return false;
 		}
-        Authors author = iAuthorsDao.selectByAccount(account);
+        Authors author = authorsGetByAccount(account);
         if(author==null){
             return false;
         }
         info.setId(author.getId());
 		info.setAccount(account);
-		int result = iAuthorsDao.update(info);
-		if(result<=0){
+        int result = iAuthorsDao.updateByPrimaryKeySelective(info);
+        if(result<=0){
 			return false;
 		}
 		return true;
@@ -172,12 +177,7 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public Authors getAuthor(int authorId) {
-        return iAuthorsDao.selectById(authorId);
+        return iAuthorsDao.selectByPrimaryKey(authorId);
     }
-
-
-	
-
-	
 
 }

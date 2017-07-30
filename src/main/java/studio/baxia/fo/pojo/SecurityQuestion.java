@@ -1,11 +1,13 @@
 package studio.baxia.fo.pojo;
 
+import javax.persistence.Table;
+
 /**
  * Created by FirePan on 2016/10/11.
  * 安全问题实体信息.
  */
-public class SecurityQuestion {
-    private Integer id;
+@Table(name = "t_security_question")
+public class SecurityQuestion extends BaseId {
     private Integer userType;//用户类别（管理员，作者）
     private String questoin01;
     private String answer01;
@@ -26,14 +28,6 @@ public class SecurityQuestion {
                 ", question03='" + question03 + '\'' +
                 ", answer03='" + answer03 + '\'' +
                 '}';
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public Integer getUserType() {

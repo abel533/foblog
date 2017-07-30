@@ -1,11 +1,13 @@
 package studio.baxia.fo.pojo;
 
+import javax.persistence.Table;
+
 /**
  * Created by FirePan on 2016/10/11.
  * 访客实体信息.
  */
-public class Guest {
-    private Integer id;
+@Table(name = "t_guest")
+public class Guest extends BaseId {
     private String email;//通讯邮箱
     private String nickname;//昵称
     private String personalWebsite;//个人网址
@@ -20,14 +22,6 @@ public class Guest {
                 ", personalWebsite='" + personalWebsite + '\'' +
                 ", accessIp='" + accessIp + '\'' +
                 '}';
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public String getEmail() {

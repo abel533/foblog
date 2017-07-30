@@ -4,8 +4,8 @@ package studio.baxia.fo.pojo;
  * Created by Pan on 2016/12/20.
  */
 public class RecommendContent {
-    private int id;
-    private String content;
+    private Integer id;
+    private String  content;
 
     public RecommendContent() {
     }
@@ -14,11 +14,11 @@ public class RecommendContent {
         this.content = content;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

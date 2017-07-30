@@ -1,9 +1,10 @@
 package studio.baxia.fo.service.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import studio.baxia.fo.common.CommonConstant;
 import studio.baxia.fo.common.PageConfig;
 import studio.baxia.fo.common.PageInfoResult;
 import studio.baxia.fo.dao.IProjectDao;
@@ -29,7 +30,7 @@ public class ProjectServiceImpl implements IProjectService {
         project.setHits(0);
         project.setPubTime(new Date());
         Integer result = iProjectDao.insert(project);
-        if (ReturnUtil.returnResult(result)){
+        if (ReturnUtil.returnResult(result)) {
             return project.getId();
         }
         return 0;
@@ -37,8 +38,8 @@ public class ProjectServiceImpl implements IProjectService {
 
     @Override
     public long edit(Project project) {
-        Integer result = iProjectDao.update(project);
-        if(ReturnUtil.returnResult(result)){
+        Integer result = iProjectDao.updateByPrimaryKey(project);
+        if (ReturnUtil.returnResult(result)) {
             return project.getId();
         }
         return 0;
@@ -46,33 +47,35 @@ public class ProjectServiceImpl implements IProjectService {
 
     @Override
     public boolean remove(long id) {
-        Integer result = iProjectDao.delete(id);
+        Integer result = iProjectDao.deleteByPrimaryKey(id);
         return ReturnUtil.returnResult(result);
     }
 
     @Override
     public List<Project> list(boolean status) {
-        return iProjectDao.selectBy(new Project(status),null);
+        Project project = new Project(status);
+        return iProjectDao.select(project);
     }
 
     @Override
     public PageInfoResult<Project> list(PageConfig pageConfig, Project project) {
-        List<Project> list = iProjectDao.selectBy(project,pageConfig);
-        int counts = iProjectDao.selectCountBy(project);
-        PageInfoResult<Project> pageInfoResult = new PageInfoResult<>(list,pageConfig,counts);
+        PageHelper.startPage(pageConfig);
+        List<Project> list = iProjectDao.select(project);
+        PageInfoResult<Project> pageInfoResult = new PageInfoResult<>(list, pageConfig, (int) ((Page) list).getTotal());
         return pageInfoResult;
     }
 
     @Override
     public boolean hits(Long id) {
-        Project project = iProjectDao.selectById(id, CommonConstant.PROJECT_ALL);
-        project.setHits(project.getHits()+1);
-        iProjectDao.updateHits(project);
+        iProjectDao.updateHits(id);
         return false;
     }
 
     @Override
-    public Project get(long id,boolean status) {
-        return iProjectDao.selectById(id,status);
+    public Project get(long id, boolean status) {
+        Project selectBy = new Project();
+        selectBy.setId((int) id);
+        selectBy.setStatus(status);
+        return iProjectDao.selectOne(selectBy);
     }
 }

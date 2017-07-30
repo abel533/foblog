@@ -3,6 +3,7 @@ package studio.baxia.fo.pojo;
 import studio.baxia.fo.common.CommonConstant;
 import studio.baxia.fo.common.TreeInfo;
 
+import javax.persistence.Table;
 import java.util.Date;
 
 /**
@@ -10,8 +11,8 @@ import java.util.Date;
  * 文章留言实体信息.
  * 注意：评论这里采用廖雪峰老师的博客的方式，分块，最多两层。(舍弃)
  */
+@Table(name = "t_message")
 public class Message extends TreeInfo {
-    private Integer id;
     private Integer articleId;//评论的文章id
     private Integer blockId;//所在评论的文章的评论区的第几块区域id
     private Integer parentId = CommonConstant.MESSAGE_DEFAULT_PARENT_ID;//父id
@@ -30,14 +31,6 @@ public class Message extends TreeInfo {
 
     public Message(String content) {
         this.content = content;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public Integer getArticleId() {

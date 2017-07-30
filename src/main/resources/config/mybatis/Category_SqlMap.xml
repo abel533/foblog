@@ -16,67 +16,6 @@
         <result property="counts" column="article_counts"/>
     </resultMap>
 
-    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO t_category(name,description,status,code)
-        VALUES (#{name,jdbcType=VARCHAR},#{description,jdbcType=VARCHAR},#{status,jdbcType=TINYINT},#{code,jdbcType=VARCHAR})
-    </insert>
-
-    <delete id="delete">
-        DELETE FROM t_category
-        <if test="ids!=null">
-            <if test="ids.size()==0">
-                WHERE id = 0
-            </if>
-            <if test="ids.size()!=0">
-                WHERE id IN
-                <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
-                    #{item,jdbcType=INTEGER}
-                </foreach>
-            </if>
-        </if>
-    </delete>
-
-    <delete id="deleteById">
-        DELETE FROM t_category
-        WHERE id = #{id,jdbcType=INTEGER}
-    </delete>
-
-    <update id="update">
-        UPDATE t_category
-        SET
-          name=#{name,jdbcType=VARCHAR},
-          description = #{description,jdbcType=VARCHAR},
-          code =#{code,jdbcType=VARCHAR},
-          status=#{status,jdbcType=TINYINT}
-        WHERE id = #{id,jdbcType=INTEGER}
-    </update>
-
-    <select id="selectById" resultMap="CategoryMap">
-        SELECT * FROM t_category
-        WHERE id=#{id,jdbcType=INTEGER}
-        <if test="status!=null and status==true">
-            and status = #{status,jdbcType=TINYINT}
-        </if>
-    </select>
-
-    <select id="selectBy" resultMap="CategoryMap">
-        SELECT * FROM t_category
-        <where>
-            <if test="status!=null and status==true">
-                status = #{status,jdbcType=TINYINT}
-            </if>
-        </where>
-        ORDER BY  id
-    </select>
-    <select id="selectByCode" resultMap="CategoryMap">
-        SELECT * FROM t_category
-        WHERE
-            code = #{code,jdbcType=VARCHAR}
-        <if test="status!=null and status==true">
-            and status = #{status,jdbcType=TINYINT}
-        </if>
-        limit 1
-    </select>
     <select id="selectByName" resultMap="CategoryMap">
     	SELECT * FROM t_category
         WHERE

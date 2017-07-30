@@ -20,7 +20,7 @@ public class GuestServiceImpl implements IGuestService{
 
     @Override
     public List<Guest> getAllGuests() {
-        return guestDao.queryAll();
+        return guestDao.selectAll();
     }
 
     @Override
