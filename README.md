@@ -2,13 +2,13 @@
 
 项目 Fork 自 [FireOct](https://git.oschina.net/phn) 的 [fo-blog](https://git.oschina.net/phn/foblog).
 
-响应式开源个人博客（简洁清爽风格），可以查看效果，点击进入http://panhainan.com
+响应式开源个人博客（简洁清爽风格）
 
 ## 项目改动
 
 经过 abel533(liuzh) 的修改，使得本项目变成一个基于通用Mapper 和 分页插件 PageHelper 的示例项目。
 
-更多 MyBatis 相关内容可以访问：http://mybatis.tk
+更多 MyBatis 相关内容可以访问：https://mybatis.io
 
 ### 基本改动
 
